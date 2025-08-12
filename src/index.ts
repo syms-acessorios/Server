@@ -59,7 +59,13 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   const app = express();
   const PORT = process.env.PORT || serverOptions.port;
 
-  app.use(cors());
+  app.use(
+  cors({
+    origin: 'https://front-1-5zv6.onrender.com',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true,
+  })
+);
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
   app.use('/files', express.static('WhatsAppImages'));
@@ -103,10 +109,12 @@ export function initServer(serverOptions: Partial<ServerOptions>): {
   createFolders();
   const http = createServer(app);
   const io = new Socket(http, {
-    cors: {
-      origin: '*',
-    },
-  });
+  cors: {
+    origin: 'https://front-1-5zv6.onrender.com',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 
   io.on('connection', (sock) => {
     logger.info(`ID: ${sock.id} entrou`);
